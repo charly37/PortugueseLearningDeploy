@@ -120,5 +120,6 @@ helm install vm victoria-metrics/victoria-metrics-single \
   --namespace logging \
   -f values-metrics.yaml
 ```
+
 # PortugueseLearningDeploy
 See the app documentation: https://github.com/charly37/PortugueseLearning
