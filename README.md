@@ -121,5 +121,6 @@ helm install vm victoria-metrics/victoria-metrics-single \
   -f values-metrics.yaml
 ```
 
-# PortugueseLearningDeploy
+# PortugueseLearning Application
+This is my application running in the cluster. It could run on any K8S so the doc is outside of this repo...
 See the app documentation: https://github.com/charly37/PortugueseLearning
