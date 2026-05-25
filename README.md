@@ -106,7 +106,8 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 
 helm install node-exporter prometheus-community/prometheus-node-exporter \
-  --namespace logging 
+  --namespace logging \
+  -f node-exporter.yaml
 ```
 ### VictoriaMetrics
 node exporter link to victoriametrics (prom too big for small cluster):
@@ -118,4 +119,6 @@ helm repo update
 helm install vm victoria-metrics/victoria-metrics-single \
   --namespace logging \
   -f values-metrics.yaml
-```# PortugueseLearningDeploy
+```
+# PortugueseLearningDeploy
+See the app documentation: https://github.com/charly37/PortugueseLearning
