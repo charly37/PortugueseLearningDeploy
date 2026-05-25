@@ -47,7 +47,10 @@ VictoriaLogs for log storage
 helm repo add victoriametrics https://victoriametrics.github.io/helm-charts
 helm repo update
 
-helm upgrade --install victoria-logs vm/victoria-logs-single   --namespace logging   --values Victlogs.yaml   --wait
+helm upgrade --install victoria-logs vm/victoria-logs-single \
+  --namespace logging \
+  --values Victlogs.yaml \
+  --wait
 ```
 
 ### FluentBit 
@@ -70,7 +73,10 @@ FI: install community one not the old deprecated one.
 helm repo add grafana-community https://grafana-community.github.io/helm-charts
 helm repo update
 
-helm upgrade --install grafana grafana-community/grafana   --namespace logging   --values grafana-values.yaml   --wait
+helm upgrade --install grafana grafana-community/grafana \
+  --namespace logging \
+  --values grafana-values.yaml \
+  --wait
 ```
 
 I had some issue with SSL:
