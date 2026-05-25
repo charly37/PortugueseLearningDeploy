@@ -1,0 +1,64 @@
+plugins:
+  - victoriametrics-logs-datasource
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: VictoriaLogs
+        type: victoriametrics-logs-datasource
+        url: http://victoria-logs-victoria-logs-single-server:9428
+        access: proxy
+        isDefault: false
+        editable: true
+        jsonData:
+          httpMethod: GET
+      - name: VictoriaMetrics
+        type: prometheus
+        url: http://vm-victoria-metrics-single-server:8428
+        access: proxy
+        isDefault: false
+        editable: true
+        jsonData:
+          httpMethod: GET
+
+dashboards:
+  default:
+    node-exporter-full:
+      gnetId: 1860
+      revision: 1
+      datasource: VictoriaMetrics
+
+initChownData:
+  enabled: false        #bug on k3s with localpath with init container chmod
+
+persistence:
+  enabled: true
+  size: 8Gi
+  storageClass: "local-path"
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+grafana.ini:
+  server:
+    root_url: https://grafana.dialecthub.net
+
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  hosts:
+    - grafana.dialecthub.net
+  path: /
+  pathType: Prefix
+  tls:
+    - secretName: grafana-tls
+      hosts:
+        - grafana.dialecthub.net

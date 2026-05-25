@@ -1,0 +1,11 @@
+---
+k3s_version: "latest"
+k3s_token: "supersecret-token-change-me-12345"
+
+# k3s Server Settings
+k3s_server:
+  extra_args:
+    - "--write-kubeconfig-mode 644"
+    - "--kubelet-arg=max-pods=150"
+    # Do NOT disable traefik because you are using it as Ingress
+    # - "--disable traefik"     ← Commented out / removed

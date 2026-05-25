@@ -1,0 +1,88 @@
+---
+- name: Update APT cache and upgrade system
+  apt:
+    update_cache: yes
+    upgrade: dist
+    autoclean: yes
+  changed_when: false
+
+- name: Install required system packages
+  apt:
+    name: "{{ system_packages }}"
+    state: present
+    update_cache: yes
+
+# ====================== HELM INSTALLATION ======================
+- name: Download Helm installer script
+  get_url:
+    url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    dest: /tmp/get_helm.sh
+    mode: '0755'
+
+- name: Install Helm
+  command: /tmp/get_helm.sh
+  args:
+    creates: /usr/local/bin/helm
+
+- name: Verify Helm installation
+  command: helm version --short
+  changed_when: false
+  register: helm_version
+
+- name: Display Helm version
+  debug:
+    msg: "✅ Helm installed: {{ helm_version.stdout }}"
+
+# ====================== K3S INSTALLATION ======================
+- name: Download k3s installation script
+  get_url:
+    url: https://get.k3s.io
+    dest: /usr/local/bin/k3s-install.sh
+    mode: '0755'
+
+- name: Install k3s (Single Node)
+  command: /usr/local/bin/k3s-install.sh
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version if k3s_version != 'latest' else '' }}"
+    K3S_TOKEN: "{{ k3s_token }}"
+    K3S_INSTALL_OPTIONS: "{{ k3s_server.extra_args | join(' ') }}"
+  args:
+    creates: /usr/local/bin/k3s
+
+- name: Wait for k3s to start and generate kubeconfig
+  wait_for:
+    path: /etc/rancher/k3s/k3s.yaml
+    delay: 10
+    timeout: 180
+
+- name: Copy kubeconfig to user directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /home/{{ ansible_user }}/.kube/config
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+    remote_src: yes
+
+- name: Fix .kube directory permissions
+  file:
+    path: /home/{{ ansible_user }}/.kube
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Add KUBECONFIG to .bashrc
+  lineinfile:
+    path: /home/{{ ansible_user }}/.bashrc
+    line: 'export KUBECONFIG=~/.kube/config'
+    state: present
+    create: yes
+
+- name: Show k3s service status
+  command: systemctl status k3s --no-pager
+  changed_when: false
+  register: k3s_status
+
+- name: Display k3s status
+  debug:
+    msg: "{{ k3s_status.stdout_lines | default('No output') }}"

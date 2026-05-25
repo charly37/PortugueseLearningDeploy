@@ -1,0 +1,8 @@
+---
+- name: Install k3s + Helm on Single Node
+  hosts: k3s-node
+  become: true
+  gather_facts: true
+
+  roles:
+    - k3s

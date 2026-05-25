@@ -1,0 +1,35 @@
+server:
+  image:
+    tag: "v1.118.0"
+
+  persistentVolume:
+    enabled: true
+    storageClass: "local-path"
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
+
+  retentionPeriod: "30d"
+  retentionMaxDiskUsagePercent: "80"
+
+  resources:
+    limits:
+      cpu: "300m"
+      memory: "512Mi"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+
+  # Correct format for this chart
+  extraArgs:
+    promscrape.config: /etc/vm/scrape.yml
+
+  extraVolumes:
+    - name: scrape-config
+      configMap:
+        name: vm-scrape-config
+
+  extraVolumeMounts:
+    - name: scrape-config
+      mountPath: /etc/vm/scrape.yml
+      subPath: scrape.yml

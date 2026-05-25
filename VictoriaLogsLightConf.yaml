@@ -1,0 +1,22 @@
+server:
+  image:
+    tag: "v1.50.0"
+
+  # Use PVC with local-path instead of hostPath
+  persistentVolume:
+    enabled: true
+    storageClass: "local-path"
+    size: 15Gi
+    accessModes:
+      - ReadWriteOnce
+
+  retentionPeriod: "15d"
+  retentionMaxDiskUsagePercent: "80"     #to be safe on disk space
+
+  resources:
+    limits:
+      cpu: "400m"
+      memory: "384Mi"
+    requests:
+      cpu: "100m"
+      memory: "192Mi"
