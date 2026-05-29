@@ -11,6 +11,19 @@ resources:
 
 # Disable default Elasticsearch output
 config:
+  # Global Fluent Bit settings (Log_Level = warn removes the noisy HTTP 200 messages)
+  service: |
+    [SERVICE]
+        Daemon Off
+        Flush 1
+        Log_Level warn                  # ← this is the important change
+        Parsers_File /fluent-bit/etc/parsers.conf
+        Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+        HTTP_Server On
+        HTTP_Listen 0.0.0.0
+        HTTP_Port 2020
+        Health_Check On
+
   outputs: |
     [OUTPUT]
         Name              http
@@ -31,9 +44,3 @@ config:
         K8S-Logging.Exclude Off
         Labels              On
         Annotations         On
-
-    # Optional: Reduce noise
-    [FILTER]
-        Name   grep
-        Match  *
-        Exclude namespace_name ^(logging|kube-system)$

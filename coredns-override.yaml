@@ -11,3 +11,17 @@ data:
             fallthrough
         }
     }
+  staging.server: |
+    staging.dialecthub.net:53 {
+        hosts {
+            149.56.132.188 staging.dialecthub.net
+            fallthrough
+        }
+    }
+  victorialogs.server: |
+    victorialogs.dialecthub.net:53 {
+        hosts {
+            149.56.132.188 victorialogs.dialecthub.net
+            fallthrough
+        }
+    }
