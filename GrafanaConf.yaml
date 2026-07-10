@@ -29,8 +29,9 @@ dashboards:
       revision: 1
       datasource: VictoriaMetrics
 
+#bug on k3s with localpath with init container chmod
 initChownData:
-  enabled: false        #bug on k3s with localpath with init container chmod
+  enabled: false
 
 persistence:
   enabled: true
@@ -48,6 +49,13 @@ resources:
 grafana.ini:
   server:
     root_url: https://grafana.dialecthub.net
+
+  # === Anonymous read-only access ===
+  auth.anonymous:
+    enabled: true
+    org_name: Main Org.
+    org_role: Viewer
+    hide_version: true
 
 ingress:
   enabled: true
