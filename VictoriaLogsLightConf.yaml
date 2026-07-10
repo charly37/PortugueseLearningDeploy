@@ -1,6 +1,12 @@
 server:
   image:
     tag: "v1.50.0"
+
+  # Basic Auth (username + password) Ensure it mach fluentBit or it will fails
+  #extraArgs:
+  #  httpAuth.username: "admin1"
+  #  httpAuth.password: "ShouldNotBePlaintext"  #should go in GH secret or something clean. but today it is full open so if someone smart find this it s still not the end of world for now
+  
   ingress:
     enabled: true
     ingressClassName: traefik

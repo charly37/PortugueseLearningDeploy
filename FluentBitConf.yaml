@@ -11,12 +11,12 @@ resources:
 
 # Disable default Elasticsearch output
 config:
-  # Global Fluent Bit settings (Log_Level = warn removes the noisy HTTP 200 messages)
+  # Global Fluent Bit settings (Log_Level = error removes the noisy HTTP 200 messages)
   service: |
     [SERVICE]
         Daemon Off
         Flush 1
-        Log_Level warn                  # ← this is the important change
+        log_level error                  # ← this is the important change
         Parsers_File /fluent-bit/etc/parsers.conf
         Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
         HTTP_Server On
@@ -34,6 +34,8 @@ config:
         Format            json_lines
         Json_Date_Format  iso8601
         Retry_Limit       5
+        log_response_payload false
+        #Log_Level         error                     # ← FIXED (capital L)
 
   # Kubernetes metadata enrichment
   filters: |
